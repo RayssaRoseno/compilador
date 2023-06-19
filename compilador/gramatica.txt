@@ -1,0 +1,168 @@
+programa ::= program ID SEMICOLON corpo DOT
+
+corpo ::= declara rotina begin sentencas end
+
+declara ::= VAR dvar mais_dc
+          | /* empty */
+
+mais_dc ::= SEMICOLON cont_dc
+
+cont_dc ::= dvar mais_dc
+          | /* empty */
+
+dvar ::= variaveis COLON tipo_var
+
+tipo_var ::= INTEGER
+           | REAL
+           | LBRACE INTEGER RBRACE
+           | LBRACE REAL RBRACE
+
+variaveis ::= ID mais_var
+
+mais_var ::= COMMA variaveis
+           | /* empty */
+
+rotina ::= procedimento
+          | funcao
+          | /* empty */
+
+procedimento ::= PROCEDURE ID parametros SEMICOLON corpo SEMICOLON rotina
+
+funcao ::= FUNCTION ID parametros COLON tipo_funcao SEMICOLON corpo SEMICOLON rotina
+
+parametros ::= LPAREN lista_parametros RPAREN
+             | /* empty */
+
+lista_parametros ::= lista_id COLON tipo_var cont_lista_par
+
+cont_lista_par ::= SEMICOLON lista_parametros
+                 | /* empty */
+
+lista_id ::= ID cont_lista_id
+
+cont_lista_id ::= COMMA lista_id
+                | /* empty */
+
+tipo_funcao ::= INTEGER
+               | REAL
+               | LBRACE INTEGER RBRACE
+               | LBRACE REAL RBRACE
+
+sentencas ::= comando mais_sentencas
+
+mais_sentencas ::= SEMICOLON cont_sentencas
+                 | /* empty */
+
+cont_sentencas ::= sentencas
+                 | /* empty */
+
+var_read ::= ID mais_var_read
+
+mais_var_read ::= COMMA var_read
+                 | /* empty */
+
+var_write ::= ID mais_var_write
+
+mais_var_write ::= COMMA var_write
+                  | /* empty */
+
+comando ::= READ LPAREN var_read RPAREN
+          | WRITE LPAREN var_write RPAREN
+          | FOR ID ASSIGN expressao TO expressao DO begin sentencas end
+          | REPEAT sentencas UNTIL LPAREN condicao RPAREN
+          | WHILE LPAREN condicao RPAREN DO begin sentencas end
+          | IF LPAREN condicao RPAREN THEN begin sentencas end pfalsa
+          | ID ASSIGN expressao
+          | chamada_procedimento
+
+chamada_procedimento ::= ID argumentos
+
+argumentos ::= LPAREN lista_arg RPAREN
+             | /* empty */
+
+lista_arg ::= expressao cont_lista_arg
+
+cont_lista_arg ::= COMMA lista_arg
+                 | /* empty */
+
+condicao ::= relacao LPAREN expressao_num COMMA expressao_num RPAREN
+           | relacao LPAREN expressao_conjunto COMMA expressao_conjunto RPAREN
+
+pfalsa ::= ELSE begin sentencas end
+          | /* empty */
+
+relacao ::= EQ
+           | GT
+           | LT
+           | GE
+           | LE
+           | NE
+
+expressao ::= expressao_num
+             | expressao_conjunto
+
+expressao_num ::= termo
+                 | ID argumentos
+
+operando ::= ID
+             | INTEGER
+             | REAL
+             | operador LPAREN operando COMMA operando RPAREN
+
+operador ::= PLUS
+             | MINUS
+             | TIMES
+             | DIV
+             | FLOORDIV
+
+termo ::= operador LPAREN operando COMMA operando RPAREN
+          | ID
+          | INTEGER
+          | REAL
+
+expressao_conjunto ::= opConjunto LPAREN conteudo COMMA conteudo RPAREN
+                      | POS LPAREN INTEGER RPAREN
+
+conteudo ::= LBRACE RBRACE
+             | LBRACE INTEGER integer_num_cont RBRACE
+             | LBRACE REAL real_num_cont RBRACE
+
+integer_num_cont ::= COMMA INTEGER integer_num_cont
+                    | /* empty */
+
+real_num_cont ::= COMMA REAL real_num_cont
+                 | /* empty */
+
+opConjunto ::= UNION
+               | SUBSET
+               | PROPER_SUBSET
+               | INTERSECTION
+
+ID ::= letra id_cont
+
+id_cont ::= letra id_cont
+            | digito id_cont
+            | /* empty */
+
+num ::= digit num_cont
+
+num_cont ::= digito num_cont
+             | /* empty */
+
+integer_num ::= PLUS num
+                | MINUS num
+                | num
+                | INTEGER
+
+real_num ::= PLUS num COMMA num
+              | MINUS num COMMA num
+              | PLUS INTEGER COMMA num
+              | MINUS INTEGER COMMA num
+              | num COMMA num
+              | INTEGER COMMA num
+
+letra ::= 'a' | 'b' | ... | 'z'
+
+digito ::= '0' | '1' | ... | '9'
+
+digit ::= '1' | ... | '9'
